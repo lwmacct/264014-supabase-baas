@@ -1,0 +1,34 @@
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim() ?? "";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() ?? "";
+
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
+  : null;
+
+export function getSupabaseClient() {
+  if (!supabase) {
+    throw new Error("认证服务尚未配置，请先填写前端环境变量。");
+  }
+
+  return supabase;
+}
+
+export function getAuthRedirectUrl() {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  const redirectUrl = new URL("/", window.location.origin);
+  redirectUrl.hash = "/auth";
+  return redirectUrl.toString();
+}
