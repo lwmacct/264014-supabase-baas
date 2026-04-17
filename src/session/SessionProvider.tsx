@@ -34,7 +34,7 @@ interface SessionContextValue {
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 function buildConfigurationError() {
-  return "认证服务尚未配置，请先填写前端环境变量。";
+  return "认证服务尚未配置，请设置 VITE_SUPABASE_URL 和 VITE_SUPABASE_ANON_KEY。";
 }
 
 export function SessionProvider({ children }: { children: ReactNode }) {
